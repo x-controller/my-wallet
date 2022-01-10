@@ -1,6 +1,8 @@
 import {ethers} from "ethers"
 import {ipcRenderer} from "electron";
 
+const allProviders={}
+
 const createWallet = () => {
     return ethers.Wallet.createRandom()
 }
@@ -29,19 +31,22 @@ const ipcInvoke = async (channel, ...args) => {
     return await ipcRenderer.invoke(channel, ...args)
 }
 
-
+// 取全部钱包
 const getWallets = async () => {
     return await ipcInvoke("getStoreValue", "my-wallet/wallets", "wallets")
 }
 
+// 取指定钱包
 const getWallet = async (name) => {
     return await ipcInvoke("getStoreValue", "my-wallet/wallets", `wallets.${name}`)
 }
 
+// 删除钱包
 const deleteWallet = async (name) => {
     return await ipcInvoke("delStoreValue", "my-wallet/wallets", `wallets.${name}`)
 }
 
+// 设置钱包支持链的provider
 const allProvider = async () => {
     let rpc = await ipcInvoke("getStoreValue", "my-wallet/chains", "chains")
     rpc = rpc || {
@@ -57,10 +62,12 @@ const allProvider = async () => {
             await provider.getBlockNumber()
         )
         providers[chainId] = provider
+        allProviders[chainId] = provider
     }
     return providers
 }
 
+// 确保provider被取到
 const getProvider = async (url) => {
     let isRun = true
     let provider = null
@@ -75,6 +82,7 @@ const getProvider = async (url) => {
     return provider
 }
 
+// 取钱包资产
 const getWalletAssets = async (walletName) => {
     const assets = await ipcInvoke("getStoreValue", "my-wallet/assets", `${walletName}`)
     const data = []
