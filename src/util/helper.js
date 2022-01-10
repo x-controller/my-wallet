@@ -97,7 +97,19 @@ const setWalletAsset = async (walletName, asset) => {
     return await ipcRenderer.invoke('setStoreValue', "my-wallet/assets", `${walletName}.${asset.address}`, asset)
 }
 
+const saveWatchWallet=async(address,name,chainId)=>{
+    return await ipcRenderer.invoke('setStoreValue', "my-wallet/watches", `watches.${address}-${chainId}`, {
+        address,name,chainId
+    })
+}
+
+const getWatchWallets=async()=>{
+    return await ipcRenderer.invoke('getStoreValue', "my-wallet/watches", `watches`)
+}
+
 export default {
+    getWatchWallets,
+    saveWatchWallet,
     createWallet,
     importPrivateKey,
     walletNameExist,
