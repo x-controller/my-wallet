@@ -1,7 +1,7 @@
 import {ethers} from "ethers"
 import {ipcRenderer} from "electron";
 
-const allProviders={}
+const allProviders = {}
 
 const createWallet = () => {
     return ethers.Wallet.createRandom()
@@ -105,13 +105,13 @@ const setWalletAsset = async (walletName, asset) => {
     return await ipcRenderer.invoke('setStoreValue', "my-wallet/assets", `${walletName}.${asset.address}`, asset)
 }
 
-const saveWatchWallet=async(address,name,chainId)=>{
+const saveWatchWallet = async (address, name, chainId) => {
     return await ipcRenderer.invoke('setStoreValue', "my-wallet/watches", `watches.${address}-${chainId}`, {
-        address,name,chainId
+        address, name, chainId
     })
 }
 
-const getWatchWallets=async()=>{
+const getWatchWallets = async () => {
     return await ipcRenderer.invoke('getStoreValue', "my-wallet/watches", `watches`)
 }
 

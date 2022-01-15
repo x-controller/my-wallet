@@ -2,9 +2,11 @@
 
 import {app, protocol, BrowserWindow} from 'electron'
 import {createProtocol} from 'vue-cli-plugin-electron-builder/lib'
-console.log(app.getPath('userData'))
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 import "./util/store"
+
+require("update-electron-app")()
 
 
 // Scheme must be registered before the app is ready
@@ -57,6 +59,7 @@ app.on('activate', () => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
     if (isDevelopment && !process.env.IS_TEST) {
+        console.log("IS TEST")
     }
     createWindow()
 })
