@@ -1,10 +1,12 @@
 <template>
     <div>
         <el-tabs
+                style="user-select: none"
                 v-model="state.tabNow"
                 type="border-card"
                 closable
                 @tab-remove="onRemoveTab"
+                @tab-click="onClockTab"
         >
             <el-tab-pane
                     v-for="item in state.tabs"
@@ -19,36 +21,45 @@
 </template>
 
 <script setup>
-    import {reactive,onMounted,watch,computed} from "vue"
-    import { useStore } from "vuex"
+    import {reactive, onMounted, watch, computed} from "vue"
+    import {useStore} from "vuex"
 
     const store = useStore()
 
-    watch(()=>store.state.mainTabs,(newMainTabs)=>{
-        console.log(newMainTabs)
+    watch(() => store.state.mainTabs, (newMainTabs) => {
+        console.log(newMainTabs.length)
     })
 
-    let tabIndex = -1
     const state = reactive({
-        tabNow: store.state.mainTabNow,
-        tabs: computed(()=> store.state.mainTabs)
+        tabNow: computed({
+            get() {
+                return store.state.mainTabNow
+            },
+            set(value) {
+                store.commit("setState", {name: "mainTabNow", value})
+            }
+        }),
+        tabs: computed(() => store.state.mainTabs)
     })
 
-    onMounted(()=>{
+    onMounted(() => {
         onInsertTab()
     })
 
+    const onClockTab = () => {
+        onInsertTab()
+    }
+
     const onInsertTab = () => {
-        tabIndex += 1
-        store.commit('insertMainTab',{
-            title: 'Tab ',
-            key: tabIndex,
-            content: 'Tab content',
+        store.commit('insertMainTab', {
+            title:  new Date().getTime()+"",
+            name: new Date().getTime()+"",
+            content:  new Date().getTime()+"",
         })
     }
 
-    const onRemoveTab = (index) => {
-        state.tabs.splice(index, 1)
+    const onRemoveTab = (name) => {
+        store.commit("removeMainTab", name)
     }
 </script>
 
