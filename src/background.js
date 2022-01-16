@@ -6,7 +6,7 @@ import {createProtocol} from 'vue-cli-plugin-electron-builder/lib'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 import "./util/store"
 
-require("update-electron-app")()
+console.log(process.env.NODE_ENV)
 
 
 // Scheme must be registered before the app is ready

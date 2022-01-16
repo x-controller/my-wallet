@@ -3,7 +3,9 @@ import {createStore} from 'vuex'
 export const store = createStore({
     state() {
         return {
-            allProvider: {}
+            allProvider: {},
+            mainTabs:[],
+            mainTabNow:0
         }
     },
     mutations: {
@@ -14,6 +16,9 @@ export const store = createStore({
             const allProvider = state.allProvider
             allProvider[chainId] = provider
             state.allProvider = allProvider
+        },
+        insertMainTab (state,{title,content,key}){
+            state.mainTabs.push({title,content,key})
         }
     }
 })
