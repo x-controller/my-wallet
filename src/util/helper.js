@@ -30,7 +30,7 @@ const importPrivateKey = async (privateKey, name, password, chainId) => {
     return newWallet
 }
 
-const getStoreValue = async (name, key, defaultValue=null) => {
+const getStoreValue = async (name, key, defaultValue = null) => {
     const value = await ipcInvoke("getStoreValue", `my-wallet/${name}`, key)
     if (value) return value
     if (defaultValue) await setStoreValue(name, key, defaultValue)
@@ -65,13 +65,18 @@ const setProviders = async () => {
     }
     for (const chainId in rpc) {
         const provider = await getProvider(rpc[chainId])
-        console.log(
-            chainId,
-            await provider.getBlockNumber()
-        )
+        setProviderEvent(provider, chainId)
+
         providers[chainId] = provider
     }
     return providers
+}
+
+const setProviderEvent = (provider, chainId) => {
+    provider.on("block", (blockNumber) => {
+        console.log(chainId, blockNumber.toString())
+        setStoreValue("common", `block-number-${chainId}`, blockNumber.toString()).then()
+    })
 }
 
 // 确保provider被取到
@@ -158,17 +163,17 @@ const syncChainTransfer = async (chainId) => {
         const to = logs[i].topics[2]
         const blockNumber = logs[i].blockNumber
         const transactionIndex = logs[i].transactionIndex
-        saveChainToken(chainId,token)
-        saveChainTransfer(token,from,to,amount,blockNumber,transactionIndex)
+        saveChainToken(chainId, token)
+        saveChainTransfer(token, from, to, amount, blockNumber, transactionIndex)
     }
     await setStoreValue("common", `transfer-sync-block-${chainId}`, toBlock)
 }
 
-const saveChainToken=(chainId,token)=>{
+const saveChainToken = (chainId, token) => {
 
 }
 
-const saveChainTransfer=(token,from,to,amount,blockNumber,transactionIndex)=>{
+const saveChainTransfer = (token, from, to, amount, blockNumber, transactionIndex) => {
 
 }
 
