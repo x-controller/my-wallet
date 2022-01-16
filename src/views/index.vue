@@ -13,7 +13,9 @@
                         </template>
                     </el-popconfirm>
 
-                    <el-button size="mini" type="primary" @click="router.push({'name':'wallet-assets',query:{'walletName':row.name}})">资产</el-button>
+                    <el-button size="mini" type="primary"
+                               @click="router.push({'name':'wallet-assets',query:{'walletName':row.name}})">资产
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -46,7 +48,6 @@
     })
 
     onMounted(async () => {
-        await getWallets()
     })
 
     const showImport = () => {
@@ -59,21 +60,12 @@
     }
 
     const onDeleteWallet = async (index, wallet) => {
-        await helper.deleteWallet(wallet.name)
+        await helper.delStoreValue("wallets", `wallets.${wallet.name}`)
         state.wallets.splice(index, 1)
         ElNotification({
             title: "删除完毕",
             type: 'success',
         })
-    }
-
-    const getWallets = async () => {
-        const wallets = await helper.getWallets()
-        const newWallets = []
-        for (const name in wallets) {
-            newWallets.push(wallets[name])
-        }
-        state.wallets = newWallets
     }
 </script>
 

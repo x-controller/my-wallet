@@ -1,7 +1,5 @@
 <template>
     <div class="main">
-
-
         <el-container>
             <el-header style="padding: 0">
                 <div style="margin: 5px 0">
@@ -46,7 +44,7 @@
 
 
     onMounted(async () => {
-        const wallets = await helper.getWallets()
+        const wallets = await helper.getStoreValue("wallets","wallets")
         store.commit("setWallets", wallets)
         syncBalanceAll().then()
         setInterval(() => {
@@ -55,7 +53,7 @@
     })
 
     const syncBalanceAll = async () => {
-        const wallets = await helper.getWallets()
+        const wallets = await helper.getStoreValue("wallets","wallets")
         for (const key in wallets) {
             await syncBalance(wallets[key])
         }
