@@ -36,18 +36,35 @@
     import MyAside from "./components/my-aside"
     import MyFooter from "./components/my-footer"
     import MyMain from "./components/my-main"
+
     const router = useRouter()
 
     const store = useStore()
 
 
-    const state = reactive({
-    })
+    const state = reactive({})
 
 
     onMounted(async () => {
-        // await setProvider()
+        const wallets = await helper.getWallets()
+        store.commit("setWallets", wallets)
+        syncBalanceAll().then()
+        setInterval(() => {
+            syncBalanceAll().then()
+        }, 60 * 1000)
     })
+
+    const syncBalanceAll = async () => {
+        const wallets = await helper.getWallets()
+        for (const key in wallets) {
+            await syncBalance(wallets[key])
+        }
+    }
+
+    const syncBalance = async (wallet) => {
+        const balance = await helper.syncBalance(wallet)
+        store.commit("setWalletAttr", {name: wallet.name, attr: "balance", value: balance})
+    }
 
     const setProvider = async () => {
         const providers = await helper.allProvider()

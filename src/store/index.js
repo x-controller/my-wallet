@@ -1,17 +1,19 @@
 import {createStore} from 'vuex'
 
 export const store = createStore({
-    strict: process.env.NODE_ENV !== 'production',
     state() {
         return {
+            wallets: {},
             mainTabs: [],
             mainTabNow: "0",
         }
     },
     mutations: {
-        // 保存钱包
-        saveWallet(state, payload) {
-
+        setWalletAttr(state, {name, attr, value}) {
+            state.wallets[name][attr] = value
+        },
+        setWallets(state, wallets) {
+            state.wallets = wallets
         },
         setState(state, {name, value}) {
             state[name] = value
@@ -19,8 +21,18 @@ export const store = createStore({
         // 添加标签页
         insertMainTab(state, {title, name, content, closeable}) {
             const tabs = state.mainTabs
-            tabs.push({title, name, content, closeable})
-            state.mainTabs = tabs
+            let exist = false
+            for (let i = 0; i < tabs.length; i++) {
+                if (tabs[i].name === name) {
+                    state.mainTabNow = name
+                    exist = true
+                }
+            }
+            if (!exist) {
+                tabs.push({title, name, content, closeable})
+                state.mainTabs = tabs
+                state.mainTabNow = name
+            }
         },
         removeMainTab(state, name) {
             if (state.mainTabNow === name) {

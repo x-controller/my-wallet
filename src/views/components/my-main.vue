@@ -14,21 +14,24 @@
                     :label="item.title"
                     :name="item.name"
             >
-                {{ item.content }}
+                <el-card :body-style="{padding:'2px'}" shadow="hover"
+                         style="margin: 5px">
+                    <el-tag size="small">{{item.content.name}}</el-tag>
+                    <el-tag size="small">{{item.content.balance}}</el-tag>
+                    <el-tag size="small">{{item.content.address}}</el-tag>
+                </el-card>
             </el-tab-pane>
         </el-tabs>
     </div>
 </template>
 
 <script setup>
-    import {reactive, onMounted, watch, computed} from "vue"
+    import {reactive, onMounted, computed} from "vue"
     import {useStore} from "vuex"
+    import helper from "../../util/helper"
 
     const store = useStore()
 
-    watch(() => store.state.mainTabs, (newMainTabs) => {
-        console.log(newMainTabs.length)
-    })
 
     const state = reactive({
         tabNow: computed({
@@ -43,18 +46,24 @@
     })
 
     onMounted(() => {
-        onInsertTab()
+        helper.emitter.on('check-wallet', wallet => {
+            store.commit("insertMainTab", {
+                title: wallet.name,
+                name: `wallet-${wallet.name}`,
+                content: wallet,
+                closeable: true
+            })
+        })
     })
 
     const onClockTab = () => {
-        onInsertTab()
     }
 
     const onInsertTab = () => {
         store.commit('insertMainTab', {
-            title:  new Date().getTime()+"",
-            name: new Date().getTime()+"",
-            content:  new Date().getTime()+"",
+            title: new Date().getTime() + "",
+            name: new Date().getTime() + "",
+            content: new Date().getTime() + "",
         })
     }
 

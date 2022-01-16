@@ -1,7 +1,10 @@
 import {ethers} from "ethers"
 import {ipcRenderer} from "electron";
+import mitt from "mitt";
 
-const allProviders = {}
+const providers = {}
+
+const emitter = mitt()
 
 const createWallet = () => {
     return ethers.Wallet.createRandom()
@@ -25,6 +28,10 @@ const importPrivateKey = async (privateKey, name, password, chainId) => {
     }
     await ipcRenderer.invoke('setStoreValue', "my-wallet/wallets", `wallets.${name}`, newWallet)
     return newWallet
+}
+
+const saveWalletAttr = async (name, attr, value) => {
+    await ipcRenderer.invoke('setStoreValue', "my-wallet/wallets", `wallets.${name}.${attr}`, value)
 }
 
 const ipcInvoke = async (channel, ...args) => {
@@ -62,7 +69,6 @@ const allProvider = async () => {
             await provider.getBlockNumber()
         )
         providers[chainId] = provider
-        allProviders[chainId] = provider
     }
     return providers
 }
@@ -115,7 +121,25 @@ const getWatchWallets = async () => {
     return await ipcRenderer.invoke('getStoreValue', "my-wallet/watches", `watches`)
 }
 
+const getChainProvider = (chainId) => {
+    if (!providers[chainId]) {
+        const rpc = getRunRpcUrl(chainId)
+        providers[chainId] = new ethers.providers.JsonRpcProvider(rpc)
+    }
+    return providers[chainId]
+}
+
+const syncBalance = async (wallet) => {
+    const provider = getChainProvider(wallet.chainId)
+    const balance = await provider.getBalance(wallet.address)
+    wallet.balance = ethers.utils.formatEther(balance)
+    saveWalletAttr(wallet.name, "balance", wallet.balance).then()
+    console.log(wallet.balance)
+    return wallet.balance
+}
+
 export default {
+    syncBalance,
     getWatchWallets,
     saveWatchWallet,
     createWallet,
@@ -127,5 +151,6 @@ export default {
     getWallet,
     getWalletAssets,
     getRunRpcUrl,
-    setWalletAsset
+    setWalletAsset,
+    emitter
 }
