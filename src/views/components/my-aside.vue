@@ -7,6 +7,8 @@
             <el-tag size="small">{{value.balance}}</el-tag>
             <el-tag size="small">{{value.address}}</el-tag>
             <el-button size="small" @click="onCheckWallet(value)">查看</el-button>
+            <el-button size="small" @click="onDelWallet(name)" type="danger">删除</el-button>
+
         </el-card>
     </div>
 
@@ -31,6 +33,11 @@
 
     const onCheckWallet=(wallet)=>{
         helper.emitter.emit("check-wallet",wallet)
+    }
+
+    const onDelWallet = (name)=>{
+        helper.delStoreValue("wallets",`wallets.${name}`)
+        store.commit("removeWallet",{name})
     }
 
     const showCreate = () => {

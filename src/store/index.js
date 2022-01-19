@@ -9,6 +9,9 @@ export const store = createStore({
         }
     },
     mutations: {
+        removeWallet(state,{name}){
+            delete state.wallets[name]
+        },
         setWalletAttr(state, {name, attr, value}) {
             state.wallets[name][attr] = value
         },

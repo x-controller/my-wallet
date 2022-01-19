@@ -63,13 +63,6 @@
         const balance = await helper.syncBalance(wallet)
         store.commit("setWalletAttr", {name: wallet.name, attr: "balance", value: balance})
     }
-
-    const setProvider = async () => {
-        const providers = await helper.allProvider()
-        for (const chainId in providers) {
-            store.commit("setProvider", {chainId, provider: providers[chainId]})
-        }
-    }
 </script>
 
 <style>
