@@ -4,6 +4,7 @@
             <el-header style="padding: 0">
                 <div style="margin: 5px 0">
                     <el-button size="small" @click="router.push({name:'index'})">home</el-button>
+                    <el-button size="small" @click="router.push({name:'bookmark-index'})">书签</el-button>
                 </div>
             </el-header>
             <el-container>
@@ -13,9 +14,7 @@
                 <el-container>
                     <el-main>
                         <my-main></my-main>
-                        <!--<router-view v-slot="{ Component }">
-                            <component :is="Component"/>
-                        </router-view>-->
+
                     </el-main>
                     <el-footer>
                         <my-footer></my-footer>
@@ -24,6 +23,9 @@
             </el-container>
         </el-container>
     </div>
+    <router-view v-slot="{ Component }">
+        <component :is="Component"/>
+    </router-view>
 </template>
 
 <script setup>

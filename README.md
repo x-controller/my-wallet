@@ -1,4 +1,4 @@
     使用方便，快捷的区块链钱包。
 
-
-    C:\Users\XXXX\AppData\Local\electron\Cache
+# win electron cache path
+C:\Users\MyName\AppData\Local\electron\Cache

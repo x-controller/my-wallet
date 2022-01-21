@@ -72,6 +72,8 @@ const setProviders = async () => {
     return providers
 }
 
+
+// 设置节点事件
 const setProviderEvent = (provider, chainId) => {
     provider.on("block", (blockNumber) => {
         console.log(chainId, blockNumber.toString())
@@ -79,7 +81,7 @@ const setProviderEvent = (provider, chainId) => {
     })
 }
 
-// 确保provider被取到
+// 确保节点被连接
 const getProvider = async (url) => {
     let isRun = true
     let provider = null

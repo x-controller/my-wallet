@@ -1,5 +1,6 @@
 {
   "name": "my-wallet-electron",
+  "description": "this-is-my-application",
   "author": "chmzho",
   "version": "0.0.1",
   "private": true,

@@ -21,6 +21,7 @@ const router = createRouter({
     routes: [
         {path: "/", name: "index", component: () => import("../views/index.vue")},
         simpleRoute("wallet",["assets"]),
+        simpleRoute("bookmark",["index"]),
         {path: '/:pathMatch(.*)*', redirect: "/"},
     ],
 })
