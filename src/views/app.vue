@@ -48,9 +48,9 @@
     onMounted(async () => {
         const wallets = await helper.getStoreValue("wallets","wallets")
         store.commit("setWallets", wallets)
-        syncBalanceAll().then()
+        // syncBalanceAll(wallets).then()
         setInterval(() => {
-            syncBalanceAll().then()
+            // syncBalanceAll().then()
         }, 60 * 1000)
     })
 

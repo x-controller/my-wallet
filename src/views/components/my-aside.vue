@@ -4,7 +4,6 @@
         <el-card v-for="(value,name,index) in state.wallets" :key="index" :body-style="{padding:'2px'}" shadow="hover"
                  style="margin: 5px">
             <el-tag size="small">{{name}}</el-tag>
-            <el-tag size="small">{{value.balance}}</el-tag>
             <el-tag size="small">{{value.address}}</el-tag>
             <el-button size="small" @click="onCheckWallet(value)">查看</el-button>
             <el-button size="small" @click="onDelWallet(name)" type="danger">删除</el-button>
